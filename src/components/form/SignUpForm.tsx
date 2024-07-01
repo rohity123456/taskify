@@ -15,6 +15,7 @@ import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { useToast } from '../ui/use-toast';
 import { getConstant } from '@/global/constants';
+import Link from 'next/link';
 
 const FormSchema = z
   .object({
@@ -130,6 +131,12 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ handleSubmit }) => {
           Sign up
         </Button>
       </form>
+      <p className='text-center text-sm text-gray-600 mt-2'>
+        Already have an account?
+        <Link className='text-blue-500 hover:underline' href='/signin'>
+          Sign in
+        </Link>
+      </p>
     </Form>
   );
 };

@@ -1,5 +1,3 @@
-// schema.prisma
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,24 +8,33 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  username  String   @unique
-  email     String   @unique
-  password  String
-  tasksAssigned Task[] @relation("assignedTo")
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  email          String   @unique
+  password       String   
+  tasksAssigned  Task[]   @relation("TasksAssigned")
+  taskModified   Task[]   @relation("TaskModified")
 }
 
 model Task {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
-  description String
-  type        String?  
-  status      String?
-  priority    String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  description    String
+  status         Status   @default(PENDING)
+  priority       String?  @default("medium") 
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt @default(now())
+  dueAt          DateTime
 
-  assignedTo   User?     @relation("assignedTo", fields: [assignedToId], references: [id])
-  assignedToId String?   @db.ObjectId
+  assignedTo     User     @relation("TasksAssigned", fields: [assignedToId], references: [id])
+  assignedToId   String  @db.ObjectId
+  modifiedBy     User     @relation("TaskModified", fields: [modifiedById], references: [id])
+  modifiedById    String   @db.ObjectId
 }
 
+
+enum Status {
+  PENDING
+  IN_PROGRESS
+  DONE
+}

@@ -1,13 +1,7 @@
-// store/api/taskApi.ts
 import { Task } from '@prisma/client';
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { baseApi } from '../../baseAPI';
 
-export const taskApi = createApi({
-  reducerPath: 'taskApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: '/api' // Assuming your API routes are under /api
-  }),
-  tagTypes: ['Tasks'],
+export const taskApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getTasks: builder.query<Task[], void>({
       query: () => '/tasks',
@@ -19,6 +13,30 @@ export const taskApi = createApi({
       query: (body) => ({
         url: '/tasks',
         method: 'POST',
+        body
+      }),
+      invalidatesTags: ['Tasks']
+    }),
+    updateTask: builder.mutation<Task, Partial<Task>>({
+      query: (body) => ({
+        url: `/tasks/${body.id}`,
+        method: 'PATCH',
+        body
+      }),
+      invalidatesTags: ['Tasks']
+    }),
+    deleteTask: builder.mutation<Task, Partial<Task>>({
+      query: (body) => ({
+        url: `/tasks/${body.id}`,
+        method: 'DELETE',
+        body
+      }),
+      invalidatesTags: ['Tasks']
+    }),
+    toggleTaskComplete: builder.mutation<Task, Partial<Task>>({
+      query: (body) => ({
+        url: `/tasks/${body.id}`,
+        method: 'PATCH',
         body
       }),
       invalidatesTags: ['Tasks']

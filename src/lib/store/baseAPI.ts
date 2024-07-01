@@ -1,14 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { RootState } from '../store';
 import { getConstant } from '@/global/constants';
 
-export const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 export const baseQuery = fetchBaseQuery({
-  baseUrl,
+  baseUrl: '/api',
   timeout: getConstant('apiTimeout') as number,
-  prepareHeaders: async (headers, { getState }) => {
+  prepareHeaders: async (headers) => {
     const token = '';
     if (token) {
       headers.set('Authorization', `${token}`);
@@ -23,6 +21,6 @@ export const baseQuery = fetchBaseQuery({
 export const baseApi = createApi({
   reducerPath: 'api',
   baseQuery: baseQuery,
-  tagTypes: ['Media', 'RecentMedia'],
+  tagTypes: ['Tasks'],
   endpoints: (builder) => ({})
 });

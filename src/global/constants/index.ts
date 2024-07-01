@@ -1,7 +1,9 @@
 const constants = {
   //common
   defaultError: 'Something went wrong. Please try again later.',
-  apiTimeout: 100000
+  apiTimeout: 100000,
+  TASK_PRIORITIES: ['Low', 'Medium', 'High', 'Critical'],
+  TASK_STATUS: ['To Do', 'In Progress', 'Done']
 };
 
 type ConstantsType = typeof constants;
