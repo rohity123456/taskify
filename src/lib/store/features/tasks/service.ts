@@ -1,21 +1,28 @@
 import { Task } from '@prisma/client';
 import { baseApi } from '../../baseAPI';
+import { ITask } from '@/types/task';
 
 interface GETTASKS {
-  tasks: Task[];
+  tasks: ITask[];
   count: number;
 }
-type TaskQuery = Partial<Task> & {
+type TaskQuery = {
   page: string;
   pageSize: string;
-  createdAt?: string;
-  updatedAt?: string;
-  dueDate?: string;
+  q?: string;
 };
 export const taskApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getTasks: builder.query<GETTASKS, TaskQuery>({
-      query: (params) => `/tasks?${new URLSearchParams(params)}`,
+      query: (params) => {
+        const searchParams = new URLSearchParams();
+        Object.entries(params).forEach(([key, value]) => {
+          if (value !== null && value !== undefined) {
+            searchParams.append(key, String(value));
+          }
+        });
+        return `/tasks?${searchParams.toString()}`;
+      },
       providesTags: ['Tasks']
     }),
     addTask: builder.mutation<Task, Partial<Task>>({

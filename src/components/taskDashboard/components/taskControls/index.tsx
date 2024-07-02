@@ -8,6 +8,7 @@ import { Task } from '@prisma/client';
 import { Plus } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
+import { Search } from './components/searchTasks';
 
 interface TaskControlsProps {}
 const TaskControls: React.FC<TaskControlsProps> = ({}) => {
@@ -45,7 +46,7 @@ const TaskControls: React.FC<TaskControlsProps> = ({}) => {
   };
   return (
     <div className='flex'>
-      <Input placeholder='Search tasks...' />
+      <Search />
       <Modal
         open={modalOpen}
         onOpenChange={setModalOpen}

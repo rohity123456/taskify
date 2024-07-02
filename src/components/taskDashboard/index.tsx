@@ -11,15 +11,17 @@ import { SimpleAlert } from '../common/SimpleAlert';
 export default function TasksDashboard() {
   const searchParams = useSearchParams();
   const pageParam = Number(searchParams.get('page') || 1);
+  const query = searchParams.get('q');
   const itemsPerPage = 10;
   const { data, isLoading, isError, refetch } = useGetTasksQuery({
     page: `${pageParam}`,
-    pageSize: `${itemsPerPage}`
+    pageSize: `${itemsPerPage}`,
+    q: `${query}`
   });
 
   useEffect(() => {
-    refetch(); // Refetch data when pageParam changes
-  }, [pageParam, refetch]);
+    refetch();
+  }, [pageParam, query, refetch]);
 
   const tasks = data?.tasks || [];
   const count = data?.count || 0;

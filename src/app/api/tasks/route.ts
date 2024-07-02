@@ -1,4 +1,3 @@
-// app/api/tasks/route.ts
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { Task } from '@prisma/client';
@@ -6,11 +5,20 @@ import { Task } from '@prisma/client';
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const page = Number(searchParams.get('page')) || 1;
-  const pageSize = Number(searchParams.get('pageSize')) || 10;
+  const pageSize = 10;
   const skip = (page - 1) * pageSize;
+  const query = searchParams.get('q') || '';
 
   try {
     const tasks = await prisma.task.findMany({
+      where: {
+        OR: [
+          { name: { contains: query, mode: 'insensitive' } },
+          { description: { contains: query, mode: 'insensitive' } },
+          { status: { contains: query, mode: 'insensitive' } },
+          { priority: { contains: query, mode: 'insensitive' } }
+        ]
+      },
       skip,
       take: pageSize,
       orderBy: { createdAt: 'desc' }
