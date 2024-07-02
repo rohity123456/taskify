@@ -7,13 +7,13 @@ import { useRouter, useSearchParams } from 'next/navigation';
 export function Search() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const currentQuery = searchParams.get('q') || ''; // Get initial query from URL
+  const currentQuery = searchParams.get('q') || '';
 
   const [query, setQuery] = useState(currentQuery);
 
   const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const params = new URLSearchParams(searchParams); // Copy existing params
+    const params = new URLSearchParams(searchParams);
 
     if (query) {
       params.set('q', query);
@@ -21,7 +21,7 @@ export function Search() {
       params.delete('q');
     }
 
-    router.push(`/?${params}`); // Update URL with search query
+    router.push(`/?${params}`);
   };
 
   return (
@@ -31,7 +31,7 @@ export function Search() {
         placeholder='Search by name, description, status, priority...'
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        className='w-full'
+        className='w-full md:w-[300px] dark:bg-zinc-800 outline-none border-2 dark:border-stone-100'
       />
     </form>
   );

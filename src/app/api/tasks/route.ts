@@ -21,7 +21,7 @@ export async function GET(request: Request) {
       },
       skip,
       take: pageSize,
-      orderBy: { createdAt: 'desc' },
+      orderBy: { updatedAt: 'desc' },
       select: {
         id: true,
         name: true,
@@ -30,6 +30,7 @@ export async function GET(request: Request) {
         priority: true,
         createdAt: true,
         updatedAt: true,
+        dueDate: true,
         assignedToId: true,
         assignedTo: {
           select: {
@@ -40,7 +41,17 @@ export async function GET(request: Request) {
       }
     });
 
-    const count = await prisma.task.count();
+    const count = await prisma.task.count({
+      where: {
+        OR: [
+          { name: { contains: query, mode: 'insensitive' } },
+          { description: { contains: query, mode: 'insensitive' } },
+          { status: { contains: query, mode: 'insensitive' } },
+          { priority: { contains: query, mode: 'insensitive' } }
+        ]
+      }
+    });
+
     return NextResponse.json({ tasks, count });
   } catch (error) {
     console.error('Error fetching tasks:', error);

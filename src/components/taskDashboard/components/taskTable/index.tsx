@@ -64,20 +64,18 @@ export function TaskTable({
     if (endPage - startPage + 1 < maxVisiblePages) {
       startPage = Math.max(1, endPage - maxVisiblePages + 1);
     }
-
+    const params = new URLSearchParams(searchParams);
     for (let i = startPage; i <= endPage; i++) {
+      params.set('page', String(i));
       pageLinks.push(
         <PaginationItem key={i}>
-          <Link href={`/?page=${i}`} legacyBehavior>
-            <PaginationLink
-              className={
-                page == i
-                  ? 'bg-primary text-primary-foreground'
-                  : 'cursor-pointer'
-              }
-            >
-              {i}
-            </PaginationLink>
+          <Link
+            className={`${
+              page == i ? 'bg-primary text-primary-foreground' : ''
+            } cursor-pointer p-1 px-2 rounded ml-1`}
+            href={`?${params}`}
+          >
+            {i}
           </Link>
         </PaginationItem>
       );
@@ -105,6 +103,7 @@ export function TaskTable({
             <TableHead>Status</TableHead>
             <TableHead>Priority</TableHead>
             <TableHead>Assigned To</TableHead>
+            <TableHead>Due Date</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>

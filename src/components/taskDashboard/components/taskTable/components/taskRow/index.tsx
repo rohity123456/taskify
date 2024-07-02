@@ -50,12 +50,19 @@ export function TaskRow({ task, onDelete, onUpdate, users }: TaskRowProps) {
   const formattedUpdatedAt = task.updatedAt
     ? format(new Date(task.updatedAt), 'MMM d, yyyy')
     : null;
+  const formattedDueDate = task.dueDate
+    ? format(new Date(task.dueDate), 'MMM d, yyyy')
+    : null;
 
   return (
     <TableRow
       ref={rowRef}
       onDoubleClick={handleDoubleClick}
-      className={isEditing ? 'bg-yellow-100 hover:bg-yellow-100' : ''}
+      className={
+        isEditing
+          ? 'bg-yellow-100 hover:bg-yellow-100 dark:bg-amber-500 dark:hover:bg-amber-500'
+          : ''
+      }
     >
       <TableCell className='font-medium'>
         {formattedUpdatedAt || formattedDate}
@@ -159,6 +166,7 @@ export function TaskRow({ task, onDelete, onUpdate, users }: TaskRowProps) {
           editedTask.assignedTo?.username || 'Unassigned'
         )}
       </TableCell>
+      <TableCell className='font-medium'>{formattedDueDate}</TableCell>
       <TableCell className='flex justify-center gap-2 items-center'>
         {!isEditing && (
           <Button

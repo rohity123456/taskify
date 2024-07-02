@@ -9,7 +9,11 @@ export async function PATCH(
   const { id } = params;
   try {
     const data = await request.json();
-    const updatedTask: Task = await prisma.task.update({ where: { id }, data });
+
+    const updatedTask: Task = await prisma.task.update({
+      where: { id },
+      data: { ...data, updatedAt: new Date() }
+    });
     return NextResponse.json(updatedTask);
   } catch (error) {
     console.error('Error updating task:', error);

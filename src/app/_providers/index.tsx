@@ -11,9 +11,16 @@ const Providers: React.FC<ProviderProps> = ({ children }) => {
   return (
     <>
       <SessionProvider>
-        <ThemeProvider defaultTheme='system'>
-          <StoreProvider>{children}</StoreProvider>
-        </ThemeProvider>
+        <StoreProvider>
+          <ThemeProvider
+            attribute='class'
+            defaultTheme='system'
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
+        </StoreProvider>
       </SessionProvider>
     </>
   );

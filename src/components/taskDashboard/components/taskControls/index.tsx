@@ -1,7 +1,6 @@
 import Modal from '@/components/common/Modal';
 import AddTaskForm, { AddTaskFormValues } from '@/components/form/AddTask';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
 import { useAddTaskMutation } from '@/lib/store/features/tasks/service';
 import { Task } from '@prisma/client';
@@ -47,15 +46,14 @@ const TaskControls: React.FC<TaskControlsProps> = ({}) => {
   return (
     <div className='flex'>
       <Search />
+      <Button className='ml-2' onClick={() => setModalOpen(true)}>
+        <Plus className='mr-2' />
+        Add Task
+      </Button>
       <Modal
         open={modalOpen}
         onOpenChange={setModalOpen}
-        trigger={
-          <Button className='ml-2' onClick={() => setModalOpen(true)}>
-            <Plus className='mr-2' />
-            Add Task
-          </Button>
-        }
+        trigger={null}
         title='Add Task'
       >
         <AddTaskForm handleAddTask={handleAddTask} isLoading={isLoading} />
