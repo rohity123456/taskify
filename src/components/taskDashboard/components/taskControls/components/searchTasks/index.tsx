@@ -1,7 +1,6 @@
 'use client';
-
 import { Input } from '@/components/ui/input';
-import { useState } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 export function Search() {
@@ -10,19 +9,34 @@ export function Search() {
   const currentQuery = searchParams.get('q') || '';
 
   const [query, setQuery] = useState(currentQuery);
+  const debouncedSearchTerm = useRef(currentQuery);
 
-  const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const params = new URLSearchParams(searchParams);
+  const handleSearch = useCallback(
+    (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      const params = new URLSearchParams(searchParams);
+      if (debouncedSearchTerm.current) {
+        params.set('q', debouncedSearchTerm.current);
+      } else {
+        params.delete('q');
+      }
+      router.push(`/?${params}`);
+    },
+    [debouncedSearchTerm.current, router, searchParams]
+  );
 
-    if (query) {
-      params.set('q', query);
-    } else {
-      params.delete('q');
-    }
-
-    router.push(`/?${params}`);
-  };
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      debouncedSearchTerm.current = query;
+      if (query === currentQuery) {
+        return;
+      }
+      handleSearch({
+        preventDefault: () => {}
+      } as React.FormEvent<HTMLFormElement>);
+    }, 1000);
+    return () => clearTimeout(timerId);
+  }, [query, currentQuery, handleSearch]);
 
   return (
     <form onSubmit={handleSearch} className='flex items-center space-x-2'>
