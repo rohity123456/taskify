@@ -1,6 +1,8 @@
+'use client';
 import React from 'react';
 import StoreProvider from './StoreProvider';
 import { ThemeProvider } from './ThemeProvider';
+import { SessionProvider } from 'next-auth/react';
 
 interface ProviderProps {
   children: React.ReactNode;
@@ -8,9 +10,11 @@ interface ProviderProps {
 const Providers: React.FC<ProviderProps> = ({ children }) => {
   return (
     <>
-      <ThemeProvider defaultTheme='system'>
-        <StoreProvider>{children}</StoreProvider>
-      </ThemeProvider>
+      <SessionProvider>
+        <ThemeProvider defaultTheme='system'>
+          <StoreProvider>{children}</StoreProvider>
+        </ThemeProvider>
+      </SessionProvider>
     </>
   );
 };

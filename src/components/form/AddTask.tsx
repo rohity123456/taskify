@@ -22,35 +22,68 @@ import {
   SelectTrigger,
   SelectValue
 } from '../ui/select';
+import DatePicker from '../common/DatePicker';
+import { User } from '@prisma/client';
 
 const taskPriorities = getConstant('TASK_PRIORITIES') as string[];
 const taskStatus = getConstant('TASK_STATUS') as string[];
 
 const TaskFormSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
   description: z.string().min(5, 'Description is required'),
   priority: z.enum(taskPriorities as [string, ...string[]]),
   status: z.enum(taskStatus as [string, ...string[]]),
   dueDate: z.date(),
-  assignedTo: z.string()
+  assignedToId: z.string()
 });
 
-type AddTaskFormValues = z.infer<typeof TaskFormSchema>;
+export type AddTaskFormValues = z.infer<typeof TaskFormSchema>;
 
-const AddTaskForm = () => {
+const users: Partial<User>[] = [
+  {
+    id: '6682969398cc3b257b17915a',
+    email: 'rohity1234561@gmail.com',
+    username: 'rohity123'
+  },
+  {
+    id: '2',
+    email: 'pDQlS@example.com',
+    username: 'johndoe'
+  }
+];
+interface AddTaskFormProps {
+  handleAddTask: (values: AddTaskFormValues) => void;
+  isLoading?: boolean;
+}
+const AddTaskForm: React.FC<AddTaskFormProps> = ({
+  handleAddTask,
+  isLoading
+}) => {
   const { toast } = useToast();
+
   const form = useForm<AddTaskFormValues>({
     resolver: zodResolver(TaskFormSchema),
     defaultValues: {
+      name: '',
       description: '',
       priority: 'High',
       status: 'pending',
-      assignedTo: '',
+      assignedToId: '',
       dueDate: new Date()
     }
   });
 
-  const onSubmit = async (values: AddTaskFormValues) => {};
-  const isLoading = form.formState.isSubmitting;
+  const onSubmit = async (values: AddTaskFormValues) => {
+    try {
+      handleAddTask(values);
+    } catch (error: any) {
+      toast({
+        title: 'Error',
+        description: 'Failed to add task',
+        variant: 'destructive'
+      });
+    }
+  };
 
   return (
     <Form {...form}>
@@ -62,6 +95,19 @@ const AddTaskForm = () => {
         className='w-full'
       >
         <div className='space-y-2'>
+          <FormField
+            control={form.control}
+            name='name'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Name</FormLabel>
+                <FormControl>
+                  <Input placeholder='Task name' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <FormField
             control={form.control}
             name='description'
@@ -132,7 +178,7 @@ const AddTaskForm = () => {
           />
           <FormField
             control={form.control}
-            name='assignedTo'
+            name='assignedToId'
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Assigned To</FormLabel>
@@ -146,9 +192,9 @@ const AddTaskForm = () => {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {taskStatus.map((status) => (
-                      <SelectItem value={status} key={status}>
-                        {status}
+                    {users.map((user = {}) => (
+                      <SelectItem value={user.id as string} key={user.id}>
+                        {user.username}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -157,12 +203,24 @@ const AddTaskForm = () => {
               </FormItem>
             )}
           />
+          <FormField
+            control={form.control}
+            name='dueDate'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Due Date</FormLabel>
+                <br />
+                <DatePicker value={field.value} onChange={field.onChange} />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
         <Button
           className='w-full mt-6'
           type='submit'
-          disabled={isLoading}
           isLoading={isLoading}
+          disabled={isLoading}
         >
           Add Task
         </Button>

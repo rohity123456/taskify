@@ -1,13 +1,28 @@
-// app/tasks/page.tsx
 'use client';
 
 import { useGetTasksQuery } from '@/lib/store/features/tasks/service';
 import { TaskTable } from './components/taskTable';
 import Loading from '../ui/loading';
 import TaskControls from './components/taskControls';
+import { useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
+import { SimpleAlert } from '../common/SimpleAlert';
 
 export default function TasksDashboard() {
-  const { data: tasks, isLoading, isError } = useGetTasksQuery();
+  const searchParams = useSearchParams();
+  const pageParam = Number(searchParams.get('page') || 1);
+  const itemsPerPage = 10;
+  const { data, isLoading, isError, refetch } = useGetTasksQuery({
+    page: `${pageParam}`,
+    pageSize: `${itemsPerPage}`
+  });
+
+  useEffect(() => {
+    refetch(); // Refetch data when pageParam changes
+  }, [pageParam, refetch]);
+
+  const tasks = data?.tasks || [];
+  const count = data?.count || 0;
 
   return (
     <div className='container'>
@@ -20,9 +35,21 @@ export default function TasksDashboard() {
           <Loading />
         </div>
       ) : isError ? (
-        <div>Error loading tasks.</div>
+        <div className='mt-2 flex items-center justify-center'>
+          <SimpleAlert
+            title='Error'
+            description='Failed to fetch tasks'
+            variant={'destructive'}
+            className='md:w-1/2'
+          />
+        </div>
       ) : (
-        <TaskTable tasks={tasks || []} />
+        <TaskTable
+          tasks={tasks || []}
+          taskCount={count}
+          page={pageParam}
+          itemsPerPage={itemsPerPage}
+        />
       )}
     </div>
   );

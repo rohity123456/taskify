@@ -1,16 +1,25 @@
 import { Task } from '@prisma/client';
 import { baseApi } from '../../baseAPI';
 
+interface GETTASKS {
+  tasks: Task[];
+  count: number;
+}
+type TaskQuery = Partial<Task> & {
+  page: string;
+  pageSize: string;
+  createdAt?: string;
+  updatedAt?: string;
+  dueDate?: string;
+};
 export const taskApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getTasks: builder.query<Task[], void>({
-      query: () => '/tasks',
-      providesTags: ['Tasks'],
-      transformResponse: (response: Task[]) =>
-        response.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
+    getTasks: builder.query<GETTASKS, TaskQuery>({
+      query: (params) => `/tasks?${new URLSearchParams(params)}`,
+      providesTags: ['Tasks']
     }),
     addTask: builder.mutation<Task, Partial<Task>>({
-      query: (body) => ({
+      query: (body: Partial<Task>) => ({
         url: '/tasks',
         method: 'POST',
         body

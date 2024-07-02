@@ -3,12 +3,21 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { Task } from '@prisma/client';
 
-export async function GET() {
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const page = Number(searchParams.get('page')) || 1;
+  const pageSize = Number(searchParams.get('pageSize')) || 10;
+  const skip = (page - 1) * pageSize;
+
   try {
     const tasks = await prisma.task.findMany({
-      orderBy: { createdAt: 'desc' } // Sort by createdAt in descending order
+      skip,
+      take: pageSize,
+      orderBy: { createdAt: 'desc' }
     });
-    return NextResponse.json(tasks);
+
+    const count = await prisma.task.count();
+    return NextResponse.json({ tasks, count });
   } catch (error) {
     console.error('Error fetching tasks:', error);
     return NextResponse.json(

@@ -1,4 +1,3 @@
-// components/TaskRow.tsx
 'use client';
 
 import { Button } from '@/components/ui/button';
@@ -48,7 +47,7 @@ export function TaskRow({
 
   return (
     <TableRow>
-      <TableCell className='font-medium'>{task.id}</TableCell>
+      <TableCell className='font-medium'>{task.name}</TableCell>
       <TableCell>
         {isEditing ? (
           <Input
@@ -59,13 +58,31 @@ export function TaskRow({
           task.description
         )}
       </TableCell>
-      <TableCell className='text-center'>
+      <TableCell className=''>
         <Checkbox
           checked={task.status === 'complete'}
           onCheckedChange={() => onToggleComplete(task.id)}
         />
+        {isEditing ? (
+          <DropdownMenu>
+            <DropdownMenuContent>
+              <DropdownMenuItem
+                onClick={() => onUpdate(task.id, { status: 'incomplete' })}
+              >
+                Incomplete
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => onUpdate(task.id, { status: 'complete' })}
+              >
+                Complete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          task.status
+        )}
       </TableCell>
-      <TableCell className='flex justify-center gap-2'>
+      <TableCell className=''>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant='outline'>Actions</Button>
