@@ -13,21 +13,21 @@ import { TableCell, TableRow } from '@/components/ui/table';
 import { useRef, useState } from 'react';
 import { format } from 'date-fns';
 import { ITask } from '@/types/task';
-import { CircleX, Trash } from 'lucide-react';
-// import { useUsersQuery } from '@/store/api/userApi';
+import { Check, Trash } from 'lucide-react';
+import { constants } from '@/global/constants';
+import { IUser } from '@/types/user';
 
 interface TaskRowProps {
   task: ITask;
   onDelete: (taskId: string) => void;
   onUpdate: (taskId: string, updatedTask: Partial<ITask>) => void;
+  users: IUser[];
 }
 
-const users: any = [];
-
-export function TaskRow({ task, onDelete, onUpdate }: TaskRowProps) {
+export function TaskRow({ task, onDelete, onUpdate, users }: TaskRowProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTask, setEditedTask] = useState(task);
-  // const { data: users } = useUsersQuery();
+
   const rowRef = useRef<HTMLTableRowElement>(null);
 
   const handleBlur = () => {
@@ -70,7 +70,7 @@ export function TaskRow({ task, onDelete, onUpdate }: TaskRowProps) {
             }
           />
         ) : (
-          task.name
+          editedTask.name
         )}
       </TableCell>
       <TableCell>
@@ -82,7 +82,7 @@ export function TaskRow({ task, onDelete, onUpdate }: TaskRowProps) {
             }
           />
         ) : (
-          task.description
+          editedTask.description
         )}
       </TableCell>
 
@@ -98,13 +98,15 @@ export function TaskRow({ task, onDelete, onUpdate }: TaskRowProps) {
               <SelectValue placeholder='Select a status' />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value='pending'>Pending</SelectItem>
-              <SelectItem value='inProgress'>In Progress</SelectItem>
-              <SelectItem value='complete'>Complete</SelectItem>
+              {constants.TASK_STATUS.map((status) => (
+                <SelectItem key={status} value={status}>
+                  {status}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         ) : (
-          task.status
+          editedTask.status
         )}
       </TableCell>
       <TableCell>
@@ -119,13 +121,15 @@ export function TaskRow({ task, onDelete, onUpdate }: TaskRowProps) {
               <SelectValue placeholder='Select a priority' />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value='low'>Low</SelectItem>
-              <SelectItem value='medium'>Medium</SelectItem>
-              <SelectItem value='high'>High</SelectItem>
+              {constants.TASK_PRIORITIES.map((priority) => (
+                <SelectItem key={priority} value={priority}>
+                  {priority}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         ) : (
-          task.priority
+          editedTask.priority
         )}
       </TableCell>
       <TableCell>
@@ -134,24 +138,25 @@ export function TaskRow({ task, onDelete, onUpdate }: TaskRowProps) {
             onValueChange={(value) =>
               setEditedTask({
                 ...editedTask,
-                assignedToId: value
+                assignedToId: value,
+                assignedTo: users?.find((user) => user.id === value) as IUser
               })
             }
-            defaultValue={editedTask.assignedTo?.id || ''}
+            defaultValue={editedTask.assignedToId || ''}
           >
             <SelectTrigger className='w-[180px]'>
               <SelectValue placeholder='Select a user' />
             </SelectTrigger>
             <SelectContent>
-              {users?.map((user: any) => (
+              {users?.map((user) => (
                 <SelectItem key={user.id} value={user.id}>
-                  {user.name}
+                  {user.username}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
         ) : (
-          task.assignedTo?.username || 'Unassigned'
+          editedTask.assignedTo?.username || 'Unassigned'
         )}
       </TableCell>
       <TableCell className='flex justify-center gap-2 items-center'>
@@ -169,10 +174,10 @@ export function TaskRow({ task, onDelete, onUpdate }: TaskRowProps) {
           <Button
             variant='ghost'
             size='icon'
-            onClick={() => setIsEditing(false)}
+            onClick={() => handleBlur()}
             className='hover:bg-transparent'
           >
-            <CircleX className='h-4 w-4' />
+            <Check className='h-4 w-4' />
           </Button>
         )}
       </TableCell>

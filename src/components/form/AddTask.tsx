@@ -14,7 +14,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { useToast } from '../ui/use-toast';
-import { getConstant } from '@/global/constants';
+import { constants, getConstant } from '@/global/constants';
 import {
   Select,
   SelectContent,
@@ -66,8 +66,8 @@ const AddTaskForm: React.FC<AddTaskFormProps> = ({
     defaultValues: {
       name: '',
       description: '',
-      priority: 'High',
-      status: 'pending',
+      priority: constants.TASK_PRIORITIES[0],
+      status: constants.TASK_STATUS[0],
       assignedToId: '',
       dueDate: new Date()
     }

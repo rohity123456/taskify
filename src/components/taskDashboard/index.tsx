@@ -7,17 +7,20 @@ import TaskControls from './components/taskControls';
 import { useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 import { SimpleAlert } from '../common/SimpleAlert';
+import { useGetUsersQuery } from '@/lib/store/features/users/service';
 
 export default function TasksDashboard() {
   const searchParams = useSearchParams();
   const pageParam = Number(searchParams.get('page') || 1);
-  const query = searchParams.get('q');
+  const query = searchParams.get('q') || '';
   const itemsPerPage = 10;
   const { data, isLoading, isError, refetch } = useGetTasksQuery({
     page: `${pageParam}`,
     pageSize: `${itemsPerPage}`,
     q: `${query}`
   });
+  const { data: usersData } = useGetUsersQuery();
+  const users = usersData?.users || [];
 
   useEffect(() => {
     refetch();
@@ -51,6 +54,7 @@ export default function TasksDashboard() {
           taskCount={count}
           page={pageParam}
           itemsPerPage={itemsPerPage}
+          users={users}
         />
       )}
     </div>

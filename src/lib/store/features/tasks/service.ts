@@ -1,4 +1,3 @@
-import { Task } from '@prisma/client';
 import { baseApi } from '../../baseAPI';
 import { ITask } from '@/types/task';
 
@@ -25,29 +24,32 @@ export const taskApi = baseApi.injectEndpoints({
       },
       providesTags: ['Tasks']
     }),
-    addTask: builder.mutation<Task, Partial<Task>>({
-      query: (body: Partial<Task>) => ({
+    addTask: builder.mutation<ITask, Partial<ITask>>({
+      query: (body: Partial<ITask>) => ({
         url: '/tasks',
         method: 'POST',
         body
       }),
       invalidatesTags: ['Tasks']
     }),
-    updateTask: builder.mutation<Task, Partial<Task>>({
+    updateTask: builder.mutation<ITask, Partial<ITask>>({
       query: (body) => {
         const taskBody = { ...body };
         delete taskBody.id;
+        if ('assignedTo' in taskBody) {
+          delete taskBody.assignedTo;
+        }
         return { url: `/tasks/${body.id}`, method: 'PATCH', body: taskBody };
       },
       invalidatesTags: ['Tasks']
     }),
-    deleteTask: builder.mutation<Task, Partial<Task>>({
+    deleteTask: builder.mutation<ITask, Partial<ITask>>({
       query: (body) => {
         return { url: `/tasks/${body.id}`, method: 'DELETE' };
       },
       invalidatesTags: ['Tasks']
     }),
-    toggleTaskComplete: builder.mutation<Task, Partial<Task>>({
+    toggleTaskComplete: builder.mutation<ITask, Partial<ITask>>({
       query: (body) => ({
         url: `/tasks/${body.id}`,
         method: 'PATCH',

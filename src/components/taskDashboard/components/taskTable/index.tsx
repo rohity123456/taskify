@@ -21,19 +21,22 @@ import Link from 'next/link';
 import { useTaskActions } from '@/app/hooks/useTaskActions';
 import { TaskRow } from './components/taskRow';
 import { ITask } from '@/types/task';
+import { IUser } from '@/types/user';
 
 interface TaskTableProps {
   tasks: ITask[];
   taskCount: number;
   page?: number;
   itemsPerPage?: number;
+  users?: IUser[];
 }
 
 export function TaskTable({
   tasks,
   taskCount,
   page = 1,
-  itemsPerPage = 10
+  itemsPerPage = 10,
+  users = []
 }: TaskTableProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -112,6 +115,7 @@ export function TaskTable({
               task={task}
               onDelete={deleteTask}
               onUpdate={updateTask}
+              users={users}
             />
           ))}
         </TableBody>

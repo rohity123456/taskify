@@ -14,7 +14,7 @@ export function useTaskActions() {
     try {
       await addTask(taskData).unwrap();
       toast({
-        title: 'Task added!'
+        title: 'Task added Successfully!'
       });
     } catch (error: any) {
       toast({
@@ -43,9 +43,6 @@ export function useTaskActions() {
   const handleToggleTaskComplete = async (id: string) => {
     try {
       await toggleTaskComplete({ id }).unwrap();
-      toast({
-        title: 'Task updated!'
-      });
     } catch (error: any) {
       toast({
         title: 'Error',
@@ -58,9 +55,6 @@ export function useTaskActions() {
   const handleUpdateTask = async (id: string, taskData: Partial<Task>) => {
     try {
       await updateTask({ id, ...taskData }).unwrap();
-      toast({
-        title: 'Task updated!'
-      });
     } catch (error: any) {
       toast({
         title: 'Error',

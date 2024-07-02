@@ -21,7 +21,23 @@ export async function GET(request: Request) {
       },
       skip,
       take: pageSize,
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        status: true,
+        priority: true,
+        createdAt: true,
+        updatedAt: true,
+        assignedToId: true,
+        assignedTo: {
+          select: {
+            id: true,
+            username: true
+          }
+        }
+      }
     });
 
     const count = await prisma.task.count();
