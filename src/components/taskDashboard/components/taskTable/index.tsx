@@ -3,7 +3,6 @@
 import {
   Table,
   TableBody,
-  TableCaption,
   TableHead,
   TableHeader,
   TableRow
@@ -20,11 +19,11 @@ import {
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useTaskActions } from '@/app/hooks/useTaskActions';
-import { Task } from '@prisma/client';
 import { TaskRow } from './components/taskRow';
+import { ITask } from '@/types/task';
 
 interface TaskTableProps {
-  tasks: Task[];
+  tasks: ITask[];
   taskCount: number;
   page?: number;
   itemsPerPage?: number;
@@ -41,7 +40,7 @@ export function TaskTable({
 
   const totalPages = Math.ceil(taskCount / itemsPerPage);
 
-  const { deleteTask, toggleTaskComplete, updateTask } = useTaskActions();
+  const { deleteTask, updateTask } = useTaskActions();
 
   const handlePageChange = (newPage: number) => {
     if (newPage < 1 || newPage > totalPages) {
@@ -97,9 +96,12 @@ export function TaskTable({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className='w-[100px]'>Task</TableHead>
+            <TableHead>Modified At</TableHead>
+            <TableHead>Task</TableHead>
             <TableHead>Description</TableHead>
             <TableHead>Status</TableHead>
+            <TableHead>Priority</TableHead>
+            <TableHead>Assigned To</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -109,7 +111,6 @@ export function TaskTable({
               key={task.id}
               task={task}
               onDelete={deleteTask}
-              onToggleComplete={toggleTaskComplete}
               onUpdate={updateTask}
             />
           ))}

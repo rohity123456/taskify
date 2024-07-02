@@ -27,19 +27,17 @@ export const taskApi = baseApi.injectEndpoints({
       invalidatesTags: ['Tasks']
     }),
     updateTask: builder.mutation<Task, Partial<Task>>({
-      query: (body) => ({
-        url: `/tasks/${body.id}`,
-        method: 'PATCH',
-        body
-      }),
+      query: (body) => {
+        const taskBody = { ...body };
+        delete taskBody.id;
+        return { url: `/tasks/${body.id}`, method: 'PATCH', body: taskBody };
+      },
       invalidatesTags: ['Tasks']
     }),
     deleteTask: builder.mutation<Task, Partial<Task>>({
-      query: (body) => ({
-        url: `/tasks/${body.id}`,
-        method: 'DELETE',
-        body
-      }),
+      query: (body) => {
+        return { url: `/tasks/${body.id}`, method: 'DELETE' };
+      },
       invalidatesTags: ['Tasks']
     }),
     toggleTaskComplete: builder.mutation<Task, Partial<Task>>({
