@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Collaborative Task List (Next.js)
 
-## Getting Started
+This is a collaborative task list application built with Next.js, allowing multiple users to manage tasks in real-time.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **User Authentication:** Secure user registration and login using NextAuth.js.
+- **Task Management:**
+  - Create, edit, and delete tasks.
+  - Assign tasks to users.
+  - Filter and search tasks by various criteria.
+  - Real-time updates of task list could not complete due to time constraints (using Liveblocks or other library in future).
+- **Modern UI:**
+  - Clean and intuitive user interface using Shadcn UI components and Tailwind CSS.
+- **Efficient Data Handling:**
+  - Prisma ORM for seamless interaction with MongoDB.
+  - Redux Toolkit (RTK Query) for efficient data fetching, caching, and state management.
+- **Robust Architecture:**
+  - Clear separation of concerns using React Server Components (RSC) and Client Components.
+  - Next.js server actions for handling form submissions and data mutations.
+- **Type Safety:** Developed using TypeScript for improved code quality and maintainability.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Technologies Used
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Frontend:**
+  - Next.js 14+
+  - React
+  - TypeScript
+  - Redux Toolkit (RTK Query)
+  - Shadcn UI
+  - Tailwind CSS
+- **Backend:**
+  - Next.js API Routes
+  - Prisma ORM
+  - MongoDB 
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- **Authentication:** NextAuth.js 
+- **Real-Time Updates (Future Implementation):** Liveblocks (or similar library)
 
-## Learn More
+## Demo
+Live : 
+  
+## Getting Started locally
 
-To learn more about Next.js, take a look at the following resources:
+1. **Clone the Repository:**
+   ```bash
+   git clone [invalid URL removed]
+   cd collaborative-task-list
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+2. **Install Dependencies:**
+   ```bash
+   npm install
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+4. **Create and update .env file:**
+   ```bash
+   <!-- Add these lines to .env -->
+      DATABASE_URL=<your-mongodb-url>
+      NEXTAUTH_SECRET="<your-secret-key>"
+   ```
 
-## Deploy on Vercel
+3. **Prisma setting:**
+   ```bash
+   npx prisma generate
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+4. **Start Development Server:**
+   ```bash
+   npm run dev
+   ```
+
