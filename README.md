@@ -38,7 +38,9 @@ This is a collaborative task list application built with Next.js, allowing multi
 - **Real-Time Updates (Future Implementation):** Liveblocks (or similar library)
 
 ## Demo
-Live : 
+- Live : [Taskify](https://taskify-kohl.vercel.app/)
+- Preview : 
+[Loom](https://www.loom.com/share/b3f22bdb2db84eebacc0457d5a13a048?sid=7c6f25bb-1b8c-4785-b82c-b1c802f18181)
   
 ## Getting Started locally
 
